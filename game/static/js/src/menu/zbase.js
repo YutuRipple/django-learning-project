@@ -27,7 +27,8 @@ class AcGameMenu{
     add_events_listener(){
         let outer = this;
         this.$single.click(function(){
-            console.log("Clicked singlemode");
+            outer.hide();
+            outer.root.playground.show();
         });
         this.$multiply.click(function(){
             console.log("Clicked multimode");

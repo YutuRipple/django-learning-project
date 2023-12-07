@@ -27,7 +27,8 @@ class AcGameMenu{
     add_events_listener(){
         let outer = this;
         this.$single.click(function(){
-            console.log("Clicked singlemode");
+            outer.hide();
+            outer.root.playground.show();
         });
         this.$multiply.click(function(){
             console.log("Clicked multimode");
@@ -52,9 +53,9 @@ class AcGamePlayground{
         this.$playground = $(`
 <div>游戏界面</div>
         `)
-    this.root.$ac_game.append(this.$playground);
-    this.hide();
-    this.start();
+        this.hide();
+        this.root.$ac_game.append(this.$playground);
+        this.start();
     }
 
     start()
@@ -78,6 +79,8 @@ class AcGame{
         this.$ac_game = $('#'+id);
         this.menu = new AcGameMenu(this);
         this.playground = new AcGamePlayground(this);
+
+        this.start();
     }
 
     start()
