@@ -5,6 +5,8 @@ class Player extends AcGameObject{
           this.ctx=this.playground.game_map.ctx;
           this.x=x;
           this.y=y;
+          this.vx=0;
+          this.vy=0;
           this.radius=radius;
           this.color=color;
           this.speed = speed;
@@ -13,9 +15,30 @@ class Player extends AcGameObject{
     }
 
     start(){
+        if(this.is_me){
+            this.add_events_listener();
+        }
+    }
+    
+    add_events_listener(){
+        let outer=this;
+        this.playground.game_map.$canvas.on("contextmenu",function(){
+            return false;    
+        });
+        this.playground.game_map.$canvas.mousedown(function(e){
+            if(e.which===3){
+                outer.move_to(e.clientX,e.clientY);
+            }
+        })
+    }
+    
+    move_to(tx,ty){
+        console.log("move to",tx,ty);
     }
 
     update(){
+        this.x=this.x+this.vx;
+        this.y=this.y+this.vy;
         this.render();
     }
 

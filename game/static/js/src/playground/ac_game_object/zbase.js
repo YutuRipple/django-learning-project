@@ -46,4 +46,4 @@ let AC_GAME_ANIMATION = function(timestamp){
 }
 
 
-requestAnimationFrame(AC_GAME_ANIMATION);
+AC_GAME_ANIMATION();
