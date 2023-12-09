@@ -28,7 +28,7 @@ class AcGameMenu{
         let outer = this;
         this.$single.click(function(){
             outer.hide();
-            outer.root.playground.show();
+            outer.root.start();
         });
         this.$multiply.click(function(){
             console.log("Clicked multimode");

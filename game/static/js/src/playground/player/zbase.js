@@ -107,9 +107,9 @@ class Player extends AcGameObject{
         this.spent_time += this.timedelta/1000;
         if(!this.is_me &&this.spent_time>4 && Math.random()<1/240.0){
             let player = this.playground.players[Math.floor(Math.random()*this.playground.players.length)];
-            let tx = player.x + player.speed * this.vx * this.timedelta / 1000*0.2;
-            let ty = player.y + player.speed * this.vy * this.timedelta / 1000*0.2;
-            this.shoot_fireball(player.x,player.y);
+            let tx = player.x + player.speed * this.vx * this.timedelta / 1000*0.3;
+            let ty = player.y + player.speed * this.vy * this.timedelta / 1000*0.3;
+            this.shoot_fireball(tx,ty);
         }
         if(this.damage_speed>10){
             this.vx=this.vy=0;
@@ -144,7 +144,7 @@ class Player extends AcGameObject{
     }
     on_destroy(){
         for(let i=0;i<this.playground.players.length;i++){
-            if(this.playground.players[i]===this){{
+            if(this.playground.players[i]===this){
                 this.playground.players.splice(i,1);
             }
         }
