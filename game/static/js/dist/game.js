@@ -140,6 +140,10 @@ class Player extends AcGameObject{
     start(){
         if(this.is_me){
             this.add_events_listener();
+        }else{
+            let tx = Math.random()*this.playground.width;
+            let ty = Math.random()*this.playground.height;
+            this.move_to(tx,ty);
         }
     }
     
@@ -194,6 +198,11 @@ class Player extends AcGameObject{
         if(this.move_length<this.eps){
             this.move_length=0;
             this.vx = this.vy = 0;
+            if(!this.is_me){
+                let tx = Math.random()*this.playground.width;
+                let ty = Math.random()*this.playground.height;
+                this.move_to(tx,ty);
+            }
         }else{
             let moved = Math.min(this.move_length,this.speed*this.timedelta/1000);
             this.x+=this.vx*moved;
@@ -263,6 +272,9 @@ class AcGamePlayground{
         this.game_map=new GameMap(this);
         this.players = [];
         this.players.push(new Player(this,this.width/2,this.height/2,this.height*0.05,"white",this.height*0.15,true))
+        for(let i=0;i<5;i++){
+            this.players.push(new Player(this,this.width/2,this.height/2,this.height*0.05,"red",this.height*0.15,false));
+        }
         this.start();
     }
 
