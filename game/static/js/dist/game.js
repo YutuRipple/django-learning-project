@@ -120,7 +120,7 @@ class GameMap extends AcGameObject{
     }
 }
 class Particle extends AcGameObject{
-    constructor(playground,x,y,radius,vx,vy,color,speed){
+    constructor(playground,x,y,radius,vx,vy,color,speed,move_length){
         super();
         this.playground=playground;
         this.ctx=this.playground.game_map.ctx;
@@ -131,6 +131,7 @@ class Particle extends AcGameObject{
         this.radius=radius;
         this.color=color;
         this.speed=speed;
+        this.move_length = move_length;
         this.friction=0.9;
         this.eps=1;
     }
@@ -139,13 +140,15 @@ class Particle extends AcGameObject{
     }
 
     update(){
-        if(this.speed<this.eps){
+        if(this.move_length<this.eps||this.speed<this.eps){
             this.destroy();
             return false;
         }
-        this.x += this.vx*this.speed*this.timedelta/1000;
-        this.y += this.vy*this.speed*this.timedelta/1000;
+        let moved = Math.min(this.move_length,this.speed*this.timedelta/1000)
+        this.x += this.vx*moved;
+        this.y += this.vy*moved;
         this.speed *= this.friction;
+        this.move_length -= moved;
         this.render();
     }
 
@@ -174,7 +177,7 @@ class Player extends AcGameObject{
           this.speed = speed;
           this.is_me=is_me;
           this.eps=0.1;
-          this.friction=0.9;
+          this.friction=0.85;
           this.cur_skill = null;
     }
 
@@ -191,7 +194,7 @@ class Player extends AcGameObject{
     add_events_listener(){
         let outer=this;
         this.playground.game_map.$canvas.on("contextmenu",function(){
-            return false;    
+            return false; 
         });
         this.playground.game_map.$canvas.mousedown(function(e){
             if(e.which===3){
@@ -236,6 +239,18 @@ class Player extends AcGameObject{
     }
 
     is_attacked(angle,damage){
+        for(let i=0;i<20+Math.random()*10;i++){
+            let x = this.x;
+            let y = this.y;
+            let radius = this.radius*Math.random()*0.1;
+            let angle = Math.PI*2*Math.random();
+            let vx = Math.cos(angle),vy = Math.sin(angle);
+            let color = this.color;
+            let speed = this.speed * 8;
+            let move_length = this.radius*Math.random()*10;
+            new Particle(this.playground,x,y,radius,vx,vy,color,speed,move_length);
+        }
+
         this.radius -= damage;
         if(this.radius < 10){
             this.destroy();
@@ -246,16 +261,6 @@ class Player extends AcGameObject{
         this.damage_speed = damage*100;
         this.speed*=1.5;
 
-        for(let i=0;i<10+Math.random()*5;i++){
-            let x = this.x;
-            let y = this.y;
-            let radius = this.radius*Math.random()*0.1;
-            let angle = Math.PI*2*Math.random();
-            let vx = Math.cos(angle),vy = Math.sin(angle);
-            let color = this.color;
-            let speed = this.speed * 3;
-            new Particle(this.playground,x,y,radius,vx,vy,color,speed);
-        }
     }
 
     update(){
@@ -371,9 +376,15 @@ class AcGamePlayground{
         this.players = [];
         this.players.push(new Player(this,this.width/2,this.height/2,this.height*0.05,"white",this.height*0.15,true))
         for(let i=0;i<5;i++){
-            this.players.push(new Player(this,this.width/2,this.height/2,this.height*0.05,"red",this.height*0.15,false));
+            this.players.push(new Player(this,this.width/2,this.height/2,this.height*0.05,this.get_random_color(),this.height*0.15,false));
         }
         this.start();
+    }
+    
+    get_random_color()
+    {
+        let colors = ["red","blue","pink","green","purple","grey"];
+        return colors[Math.floor(Math.random()*6)];
     }
 
     start()
