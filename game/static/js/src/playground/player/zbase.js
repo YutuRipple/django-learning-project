@@ -18,6 +18,7 @@ class Player extends AcGameObject{
           this.eps=0.1;
           this.friction=0.85;
           this.cur_skill = null;
+          this.spent_time = 0;
     }
 
     start(){
@@ -103,6 +104,13 @@ class Player extends AcGameObject{
     }
 
     update(){
+        this.spent_time += this.timedelta/1000;
+        if(!this.is_me &&this.spent_time>4 && Math.random()<1/240.0){
+            let player = this.playground.players[Math.floor(Math.random()*this.playground.players.length)];
+            let tx = player.x + player.speed * this.vx * this.timedelta / 1000*0.2;
+            let ty = player.y + player.speed * this.vy * this.timedelta / 1000*0.2;
+            this.shoot_fireball(player.x,player.y);
+        }
         if(this.damage_speed>10){
             this.vx=this.vy=0;
             this.move_length = 0;
